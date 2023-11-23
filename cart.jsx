@@ -175,18 +175,18 @@ const Products = (props) => {
   };
 
   return (
-    <Container>
+    <Container fluid>
       <Row>
         <Col>
-          <h1>Product List</h1>
+          <h3>Product List</h3>
           <ul style={{ listStyleType: "none" }}>{list}</ul>
         </Col>
         <Col>
-          <h1>Cart Contents</h1>
+          <h3>Cart Contents</h3>
           <Accordion defaultActiveKey="0">{cartList}</Accordion>
         </Col>
         <Col>
-          <h1>CheckOut </h1>
+          <h3>CheckOut </h3>
           <Button onClick={checkOut}>CheckOut $ {finalList().total}</Button>
           <div> {finalList().total > 0 && finalList().final} </div>
         </Col>

@@ -1,0 +1,17 @@
+ body {
+    margin: 1rem;
+ }
+
+ .container-fluid {
+    margin-top: 2rem;
+ }
+
+ .row {
+    gap: 2rem;
+ }
+
+ .col {
+    gap: 1rem;
+    background: #e8e8e8;
+    padding: 1rem;
+ }
