@@ -6,13 +6,13 @@ const products = [
   { name: "Cabbage:", country: "USA", cost: 1, instock: 8 },
 ];
 //=========Cart=============
-const Cart = (props) => {
-  const { Card, Accordion, Button } = ReactBootstrap;
-  let data = props.location.data ? props.location.data : products;
-  console.log(`data:${JSON.stringify(data)}`);
+// const Cart = (props) => {
+//   const { Card, Accordion, Button } = ReactBootstrap;
+//   let data = props.location.data ? props.location.data : products;
+//   console.log(`data:${JSON.stringify(data)}`);
 
-  return <Accordion defaultActiveKey="0">{list}</Accordion>;
-};
+//   return <Accordion defaultActiveKey="0">{list}</Accordion>;
+// };
 
 const useDataApi = (initialUrl, initialData) => {
   const { useState, useEffect, useReducer } = React;
@@ -75,6 +75,7 @@ const dataFetchReducer = (state, action) => {
 };
 
 const Products = (props) => {
+
   const [items, setItems] = React.useState(products);
   const [cart, setCart] = React.useState([]);
   const [total, setTotal] = React.useState(0);
@@ -88,6 +89,7 @@ const Products = (props) => {
     Image,
     Input,
   } = ReactBootstrap;
+
   //  Fetch Data
   const { Fragment, useState, useEffect, useReducer } = React;
   const [query, setQuery] = useState("http://localhost:1337/api/products");
@@ -99,40 +101,68 @@ const Products = (props) => {
   );
   console.log(`Rendering Products ${JSON.stringify(data)}`);
   // Fetch Data
+
   const addToCart = (e) => {
     let name = e.target.name;
     let item = items.filter((item) => item.name == name);
     console.log(`add to Cart ${JSON.stringify(item)}`);
     setCart([...cart, ...item]);
     //doFetch(query);
+    let newItems = items;
+    newItems.map((i) => {
+      if (i.name == name) i.instock--
+    });
+    // console.log(newItems);
+    setItems(newItems);
+    // not sure that setItems is effective since items is updated by the data API
+    // likely need to create a POST request to accomplish this
+    // or prevent DB refresh, i.e. only when restock is pressed
   };
-  const deleteCartItem = (index) => {
+
+  const deleteCartItem = (index, name) => {
     let newCart = cart.filter((item, i) => index != i);
     setCart(newCart);
+    let newItems = items;
+    newItems.map((i) => {
+      if (i.name == name) i.instock++
+    });
+    // console.log(newItems);
+    setItems(newItems);
+
   };
+
   const photos = ["apple.png", "orange.png", "beans.png", "cabbage.png"];
 
   let list = items.map((item, index) => {
     //let n = index + 1049;
     //let url = "https://picsum.photos/id/" + n + "/50/50";
-
     return (
       <li key={index}>
-        <Image src={photos[index % 4]} width={70} roundedCircle></Image>
-        <Button variant="primary" size="large">
+        <Card className="mb-2">
+          <Card.Img variant="top" src={photos[index % 4]} height={70}/>
+          <Card.Body>
+            <Card.Title>{item.name}</Card.Title>
+            <Card.Text>Cost:{item.cost}, Stock:{item.instock}</Card.Text>
+            <Button name={item.name} onClick={addToCart}>Add</Button>
+          </Card.Body>
+        </Card>
+        {/* <Image src={photos[index % 4]} width={70} roundedCircle></Image>
+        <p>{item.name}:{item.cost}</p>
+        {/* <Button variant="primary" size="large">
           {item.name}:{item.cost}
         </Button>
-        <input name={item.name} type="submit" onClick={addToCart}></input>
+        <Button name={item.name} onClick={addToCart}>Add</Button> */}
       </li>
     );
   });
+
   let cartList = cart.map((item, index) => {
     return (
       <Accordion.Item key={1+index} eventKey={1 + index}>
       <Accordion.Header>
         {item.name}
       </Accordion.Header>
-      <Accordion.Body onClick={() => deleteCartItem(index)}
+      <Accordion.Body onClick={() => deleteCartItem(index, item.name)}
         eventKey={1 + index}>
         $ {item.cost} from {item.country}
       </Accordion.Body>
@@ -159,19 +189,21 @@ const Products = (props) => {
     console.log(`total updated to ${newTotal}`);
     return newTotal;
   };
+
   // TODO: implement the restockProducts function
   const restockProducts = (url) => {
     
     doFetch(url);
+    
     // map through data state and pull out relevant data
-    let newStock = data.map((item) => {
-      let attr = e.attributes;
+    let newStock = data.map((a) => {
+      let attr = a.attributes;
       let {name, country, cost, instock} = attr;
       return {name, country, cost, instock};
     });
     
     // append to the list variable
-    setItems([...items, ...newStock]);
+    setItems(newStock);
   };
 
   return (
