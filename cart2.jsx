@@ -66,7 +66,8 @@ const Products = (props) => {
 
     // once the data pulled changes, update items
     useEffect(() => {
-        setItems([...items, ...data]);
+        //setItems([...items, ...data]);
+        setItems(data);
     }, [data]);
 
     // add to cart function
@@ -170,7 +171,7 @@ const Products = (props) => {
     return (
 
         <Container fluid>
-            <Row>
+            <Row id="cart-row">
                 <Col id="product-col">
                     <h3>Product List</h3>
                     <ul style={{ listStyleType: "none" }}>{productList}</ul>
