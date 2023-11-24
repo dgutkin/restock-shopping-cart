@@ -6,12 +6,12 @@
     margin-top: 2rem;
  }
 
- .row {
-    gap: 2rem;
- }
-
- .col {
+ #product-col, #cart-col, #checkout-col {
     gap: 1rem;
     background: #e8e8e8;
     padding: 1rem;
+ }
+
+ .card {
+   max-width: 24rem;
  }
